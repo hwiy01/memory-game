@@ -352,7 +352,7 @@ export default function MemoryGame() {
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.5, when: "beforeChildren", staggerChildren: 0.1 }}
                     >
-                      <div className="flex flex-col items-center" >
+                      <div className="flex flex-col items-center mb-6" >
                         <h3 className="text-2xl font-semibold mb-4 text-center text-indigo-600">Memory Grid</h3>
                         <div className="grid gap-2 justify-center items-center mb-4" style={{ gridTemplateColumns: `repeat(${gridSize}, 1fr)`, width: 'min(100%, 400px)', margin: '0 auto' }}>
                           {cards.map((card, index) => (
@@ -381,7 +381,7 @@ export default function MemoryGame() {
                       <h3 className="text-2xl font-semibold mb-2 text-center text-indigo-600">Available Cards</h3>
                       {gridSize === 5 ? (
                         <div className={`flex flex-col items-center gap-3 mb-4 py-2 `} style={{ margin: '0 auto', maxWidth: '700px' }}>
-                          <div className="flex flex-wrap justify-center items-center gap-3 mb-2">
+                          <div className="flex justify-center items-center gap-3 mb-2">
                             {availableCards.slice(0, 13).map((card, index) => (
                               <motion.div
                                 key={card}
@@ -406,7 +406,7 @@ export default function MemoryGame() {
                               </motion.div>
                             ))}
                           </div>
-                          <div className="flex flex-wrap justify-center items-center gap-3">
+                          <div className="flex justify-center items-center gap-3">
                             {availableCards.slice(13).map((card, index) => (
                               <motion.div
                                 key={card}
