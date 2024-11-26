@@ -6,22 +6,22 @@ import Button from './components/ui/Button'
 import './index.css';
 
 const cardSets = {
-  number: {
+  NUMBER: {
     3: ['1', '2', '3', '4', '5', '6', '7', '8', '9'],
     4: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16'],
     5: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25']
   },
-  shape: {
+  SHAPE: {
     3: ['■', '●', '▲', '◆', '★', '♥', '♠', '♣', '♦'],
     4: ['■', '●', '▲', '◆', '★', '♥', '♠', '♣', '♦','□', '○', '△', '◇', '☆', '♡', '♢'],
     5: ['■', '●', '▲', '◆', '★', '♥', '♠', '♣', '♦','□', '○', '△', '◇', '☆', '♡', '♢', '♤', '♧', '▼', '▶', '◀', '♩', '♪', '♫', '♬']
   },
-  arabic: {
+  ARABIC: {
     3: ['ا', 'ب', 'ت', 'ث', 'ج', 'ح', 'خ', 'د', 'ذ'],
     4: ['ا', 'ب', 'ت', 'ث', 'ج', 'ح', 'خ', 'د', 'ذ','ر', 'ز', 'س', 'ش', 'ص', 'ض', 'ط'],
     5: ['ا', 'ب', 'ت', 'ث', 'ج', 'ح', 'خ', 'د', 'ذ','ر', 'ز', 'س', 'ش', 'ص', 'ض', 'ط', 'ظ', 'ع', 'غ', 'ف', 'ق', 'ك', 'ل', 'م', 'ن'],
   },
-  alphabet: {
+  ALPHABET: {
     3: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I'],
     4: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P'],
     5: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y']
@@ -29,22 +29,22 @@ const cardSets = {
 }
 
 const avaliableCardSets = {
-    number: {
+    NUMBER: {
         3: ['1', '2', '3', '4', '5', '6', '7', '8', '9'],
         4: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16'],
         5: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24', '25']
       },
-      shape: {
+      SHAPE: {
         3: ['■', '●', '▲', '◆', '★', '♥', '♠', '♣', '♦'],
         4: ['■', '●', '▲', '◆', '★', '♥', '♠', '♣', '♦','□', '○', '△', '◇', '☆', '♡', '♢'],
         5: ['■', '●', '▲', '◆', '★', '♥', '♠', '♣', '♦','□', '○', '△', '◇', '☆', '♡', '♢', '♤', '♧', '▼', '▶', '◀', '♩', '♪', '♫', '♬']
       },
-      arabic: {
+      ARABIC: {
         3: ['ا', 'ب', 'ت', 'ث', 'ج', 'ح', 'خ', 'د', 'ذ'],
         4: ['ا', 'ب', 'ت', 'ث', 'ج', 'ح', 'خ', 'د', 'ذ','ر', 'ز', 'س', 'ش', 'ص', 'ض', 'ط'],
         5: ['ا', 'ب', 'ت', 'ث', 'ج', 'ح', 'خ', 'د', 'ذ','ر', 'ز', 'س', 'ش', 'ص', 'ض', 'ط', 'ظ', 'ع', 'غ', 'ف', 'ق', 'ك', 'ل', 'م', 'ن'],
       },
-      alphabet: {
+      ALPHABET: {
         3: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I'],
         4: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P'],
         5: ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y']
@@ -58,7 +58,7 @@ const generateCards = (count, type, gridSize) => {
 
 export default function MemoryGame({calibrationOffsets}) {
   const [gridSize, setGridSize] = useState(3)
-  const [cardType, setCardType] = useState('number')
+  const [cardType, setCardType] = useState('NUMBER')
   const [cards, setCards] = useState([])
   const [userCards, setUserCards] = useState([])
   const [visibleCards, setVisibleCards] = useState([])
@@ -73,6 +73,13 @@ export default function MemoryGame({calibrationOffsets}) {
   const [initialCardsVisible, setInitialCardsVisible] = useState(true)
   const [countdown, setCountdown] = useState(null)
   const [showGameContent, setShowGameContent] = useState(false)
+  const [gameResult, setGameResult] = useState({
+    cardCount: 0,
+    cardType: '',
+    solvedTime: 0,
+    userAnswer: '',
+    wrongCount: 0
+  });
 
   const [gazeData, setGazeData] = useState([]);
   const [isTracking, setIsTracking] = useState(false);
@@ -123,8 +130,8 @@ export default function MemoryGame({calibrationOffsets}) {
       canvas.width = width; 
       canvas.height = height; 
       drawFixationsAndSaccades(canvas, fixations, saccades);
+      saveCanvasAsImage(canvas);
     }
-    saveCanvasAsImage(canvas);
   };
 
   function analyzeGazeData(data) {
@@ -202,8 +209,7 @@ export default function MemoryGame({calibrationOffsets}) {
   }
 
 
-  const saveCanvasAsImage = () => {
-    const canvas = document.getElementById("gazeCanvas");
+  const saveCanvasAsImage = (canvas) => {
     const imageData = canvas.toDataURL("image/png"); // 캔버스를 Base64로 변환
   
     console.log('imageData',imageData);
@@ -398,8 +404,7 @@ export default function MemoryGame({calibrationOffsets}) {
       }
       setFinalScore({ correct, incorrect, time: (Date.now() - startTime) / 1000 })
     }
-
-    saveCanvasAsImage();
+    //setGameResult()
   }
 
   const ResultGrid = ({ answers, isUserGrid }) => (
@@ -452,10 +457,10 @@ export default function MemoryGame({calibrationOffsets}) {
             <div>
               <h2 className="text-2xl font-semibold mb-4 text-center text-indigo-600">Select Card Type</h2>
               <div className="flex justify-center space-x-4">
-                <CardTypeOption type="number" label="Numbers" icon={Numbers} />
-                <CardTypeOption type="alphabet" label="Alphabet" icon={AlphabeticalOrder} />
-                <CardTypeOption type="shape" label="Shapes" icon={Shapes} />
-                <CardTypeOption type="arabic" label="Arabic" icon={Languages} />
+                <CardTypeOption type="NUMBER" label="Numbers" icon={Numbers} />
+                <CardTypeOption type="ALPHABET" label="Alphabet" icon={AlphabeticalOrder} />
+                <CardTypeOption type="SHAPE" label="Shapes" icon={Shapes} />
+                <CardTypeOption type="ARABIC" label="Arabic" icon={Languages} />
               </div>
             </div>
             <div className="flex justify-center">
@@ -641,7 +646,7 @@ export default function MemoryGame({calibrationOffsets}) {
                           whileTap={{ scale: 0.95 }}
                         >
                           <Button 
-                            onClick={resetGame} 
+                            onClick={()=>resetGame()} 
                             className="px-4 py-2 bg-gradient-to-r from-red-400 to-pink-400 text-white font-bold rounded-full shadow-md transition-all duration-300 hover:shadow-lg" 
                           >
                             Exit
@@ -652,7 +657,7 @@ export default function MemoryGame({calibrationOffsets}) {
                           whileTap={{ scale: 0.95 }}
                         >
                           <Button 
-                            onClick={submitGame} 
+                            onClick={()=>submitGame()} 
                             className="px-4 py-2 bg-gradient-to-r from-green-400 to-blue-400 text-white font-bold rounded-full shadow-md transition-all duration-300 hover:shadow-lg" 
                             disabled={initialCardsVisible}
                           >
