@@ -36,10 +36,10 @@ export const BeforeGame = () => {
         }
 
         console.log('Submitted Data:', formData);
-        //const result = await fetchMemberId(formData);
-        //console.log(`memberId : ${result.member_id}`)
-        //navigate(`/MemoryGame/${result.member_id}`)
-        navigate(`/MemoryGame/1`)
+        const result = await fetchMemberId(formData);
+        console.log(`memberId : ${result.member_id}`)
+        navigate(`/MemoryGame/${result.member_id}`)
+        //navigate(`/MemoryGame/1`)
     };
 
   return (

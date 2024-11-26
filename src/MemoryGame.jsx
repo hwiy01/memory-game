@@ -404,19 +404,22 @@ export default function MemoryGame({calibrationOffsets}) {
       
       setGameResult(
         {
-          cardCount: gridSize * gridSize,
-          cardType: cardType,
-          solvedTime: Date.now() - startTime,
-          userAnswer: arrayToString(userCards),
-          wrongCount: incorrect
+          card_count: gridSize * gridSize,
+          card_type: cardType,
+          solved_time: Date.now() - startTime,
+          user_answer: arrayToString(userCards),
+          wrong_count: incorrect
         }
       )
     }
   }
 
-  useEffect(()=>{
-    console.log('game Result',gameResult);
-  },[gameResult])
+  useEffect(() => {
+    if (gameResult && Object.keys(gameResult).length > 0) {
+      fetchGameResult(memberId, gameResult);
+    }
+  }, [gameResult]);
+
 
   const ResultGrid = ({ answers, isUserGrid }) => (
     <div className="grid gap-2" style={{ gridTemplateColumns: `repeat(${gridSize}, 1fr)` }}>
