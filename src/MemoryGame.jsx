@@ -59,7 +59,7 @@ const generateCards = (count, type, gridSize) => {
   return set
 }
 
-export default function MemoryGame({calibrationOffsets}) {
+export default function MemoryGame() {
   const { memberId } = useParams();
   const [gridSize, setGridSize] = useState(3)
   const [cardType, setCardType] = useState('NUMBER')
@@ -79,159 +79,159 @@ export default function MemoryGame({calibrationOffsets}) {
   const [showGameContent, setShowGameContent] = useState(false)
   const [gameResult, setGameResult] = useState(null);
 
-  const [gazeData, setGazeData] = useState([]);
-  const [isTracking, setIsTracking] = useState(false);
-  const canvasRef = useRef(null);
+  // const [gazeData, setGazeData] = useState([]);
+  // const [isTracking, setIsTracking] = useState(false);
+  // const canvasRef = useRef(null);
 
   // eyetracking 내용 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  const FIXATION_RADIUS = 10; // Fixation의 영역 반경 (픽셀)
-  const FIXATION_DURATION = 200; // Fixation의 최소 지속 시간 (밀리초)
-  const SACCADE_SPEED_THRESHOLD = 0.4; // Saccade로 간주할 속도 (픽셀/ms)
+  // const FIXATION_RADIUS = 10; // Fixation의 영역 반경 (픽셀)
+  // const FIXATION_DURATION = 200; // Fixation의 최소 지속 시간 (밀리초)
+  // const SACCADE_SPEED_THRESHOLD = 0.4; // Saccade로 간주할 속도 (픽셀/ms)
 
-  const startTracking = () => {
-    setGazeData([]); // 기존 데이터 초기화
-    setIsTracking(true);
+  // const startTracking = () => {
+  //   setGazeData([]); // 기존 데이터 초기화
+  //   setIsTracking(true);
   
-    // WebGazer 시작
-    window.webgazer.setGazeListener((data, timestamp) => {
-      if (data) {
-        const calibratedData = applyCalibrationOffsets(data.x, data.y, calibrationOffsets);
+  //   // WebGazer 시작
+  //   window.webgazer.setGazeListener((data, timestamp) => {
+  //     if (data) {
+  //       const calibratedData = applyCalibrationOffsets(data.x, data.y, calibrationOffsets);
 
-        setGazeData((prevData) => [
-          ...prevData,
-          { x: calibratedData.x, y: calibratedData.y, timestamp },
-        ]);
-      }
-    }).begin();
+  //       setGazeData((prevData) => [
+  //         ...prevData,
+  //         { x: calibratedData.x, y: calibratedData.y, timestamp },
+  //       ]);
+  //     }
+  //   }).begin();
   
-    window.webgazer.showVideo(false); // 웹캠 미리보기 숨김
-    window.webgazer.showFaceOverlay(false); // 얼굴 오버레이 숨김
-    window.webgazer.showFaceFeedbackBox(false); // 얼굴 피드백 박스 숨김
-  };  
+  //   window.webgazer.showVideo(false); // 웹캠 미리보기 숨김
+  //   window.webgazer.showFaceOverlay(false); // 얼굴 오버레이 숨김
+  //   window.webgazer.showFaceFeedbackBox(false); // 얼굴 피드백 박스 숨김
+  // };  
 
-  function applyCalibrationOffsets(x, y, offsets) {
-    return {
-      x: x + offsets.x,
-      y: y + offsets.y,
-    };
-  }
+  // function applyCalibrationOffsets(x, y, offsets) {
+  //   return {
+  //     x: x + offsets.x,
+  //     y: y + offsets.y,
+  //   };
+  // }
   
-  const stopTracking = () => {
-    window.webgazer.end();
-    setIsTracking(false);
+  // const stopTracking = () => {
+  //   window.webgazer.end();
+  //   setIsTracking(false);
 
-    const { fixations, saccades } = analyzeGazeData(gazeData);
+  //   const { fixations, saccades } = analyzeGazeData(gazeData);
 
-    const canvas = canvasRef.current;
-    if(canvas) {
-      const { width, height } = canvas.getBoundingClientRect();
-      canvas.width = width; 
-      canvas.height = height; 
-      drawFixationsAndSaccades(canvas, fixations, saccades);
-      saveCanvasAsImage(canvas);
-    }
-  };
+  //   const canvas = canvasRef.current;
+  //   if(canvas) {
+  //     const { width, height } = canvas.getBoundingClientRect();
+  //     canvas.width = width; 
+  //     canvas.height = height; 
+  //     drawFixationsAndSaccades(canvas, fixations, saccades);
+  //     saveCanvasAsImage(canvas);
+  //   }
+  // };
 
-  function analyzeGazeData(data) {
-    const fixations = [];
-    const saccades = [];
+  // function analyzeGazeData(data) {
+  //   const fixations = [];
+  //   const saccades = [];
   
-    let currentFixation = null;
+  //   let currentFixation = null;
   
-    for (let i = 1; i < data.length; i++) {
-      const prev = data[i - 1];
-      const curr = data[i];
+  //   for (let i = 1; i < data.length; i++) {
+  //     const prev = data[i - 1];
+  //     const curr = data[i];
   
-      const dx = curr.x - prev.x;
-      const dy = curr.y - prev.y;
-      const distance = Math.sqrt(dx * dx + dy * dy);
-      const timeDelta = curr.timestamp - prev.timestamp;
-      const speed = distance / timeDelta;
+  //     const dx = curr.x - prev.x;
+  //     const dy = curr.y - prev.y;
+  //     const distance = Math.sqrt(dx * dx + dy * dy);
+  //     const timeDelta = curr.timestamp - prev.timestamp;
+  //     const speed = distance / timeDelta;
   
-      if (
-        currentFixation &&
-        distance <= FIXATION_RADIUS &&
-        curr.timestamp - currentFixation.startTimestamp <= FIXATION_DURATION
-      ) {
-        // Fixation 지속
-        currentFixation.endTimestamp = curr.timestamp;
-        currentFixation.points.push(curr);
-      } else if (distance <= FIXATION_RADIUS) {
-        // 새로운 Fixation 시작
-        currentFixation = {
-          startTimestamp: curr.timestamp,
-          endTimestamp: curr.timestamp,
-          x: curr.x,
-          y: curr.y,
-          points: [curr],
-        };
-        fixations.push(currentFixation);
-      } else if (speed > SACCADE_SPEED_THRESHOLD) {
-        // Saccade로 간주
-        saccades.push({
-          from: prev,
-          to: curr,
-          speed,
-        });
-        currentFixation = null; // Fixation 초기화
-      }
-    }
+  //     if (
+  //       currentFixation &&
+  //       distance <= FIXATION_RADIUS &&
+  //       curr.timestamp - currentFixation.startTimestamp <= FIXATION_DURATION
+  //     ) {
+  //       // Fixation 지속
+  //       currentFixation.endTimestamp = curr.timestamp;
+  //       currentFixation.points.push(curr);
+  //     } else if (distance <= FIXATION_RADIUS) {
+  //       // 새로운 Fixation 시작
+  //       currentFixation = {
+  //         startTimestamp: curr.timestamp,
+  //         endTimestamp: curr.timestamp,
+  //         x: curr.x,
+  //         y: curr.y,
+  //         points: [curr],
+  //       };
+  //       fixations.push(currentFixation);
+  //     } else if (speed > SACCADE_SPEED_THRESHOLD) {
+  //       // Saccade로 간주
+  //       saccades.push({
+  //         from: prev,
+  //         to: curr,
+  //         speed,
+  //       });
+  //       currentFixation = null; // Fixation 초기화
+  //     }
+  //   }
   
-    return { fixations, saccades };
-  }
+  //   return { fixations, saccades };
+  // }
 
-  function drawFixationsAndSaccades(canvas, fixations, saccades) {
-    const ctx = canvas.getContext("2d");
+  // function drawFixationsAndSaccades(canvas, fixations, saccades) {
+  //   const ctx = canvas.getContext("2d");
   
-    // Fixation 그리기 (원)
-    fixations.forEach((fixation) => {
-      ctx.beginPath();
-      ctx.arc(fixation.x, fixation.y, 10, 0, 2 * Math.PI); // 반경 10px
-      ctx.fillStyle = "blue"; // Fixation 색상
-      ctx.globalAlpha = 0.5; // 투명도
-      ctx.fill();
-      ctx.closePath();
-    });
+  //   // Fixation 그리기 (원)
+  //   fixations.forEach((fixation) => {
+  //     ctx.beginPath();
+  //     ctx.arc(fixation.x, fixation.y, 10, 0, 2 * Math.PI); // 반경 10px
+  //     ctx.fillStyle = "blue"; // Fixation 색상
+  //     ctx.globalAlpha = 0.5; // 투명도
+  //     ctx.fill();
+  //     ctx.closePath();
+  //   });
   
-    // Saccade 그리기 (선)
-    saccades.forEach((saccade) => {
-      ctx.beginPath();
-      ctx.moveTo(saccade.from.x, saccade.from.y);
-      ctx.lineTo(saccade.to.x, saccade.to.y);
-      ctx.strokeStyle = "red"; // Saccade 색상
-      ctx.lineWidth = 2; // 선 굵기
-      ctx.globalAlpha = 1.0; // 불투명
-      ctx.stroke();
-      ctx.closePath();
-    });
-  }
+  //   // Saccade 그리기 (선)
+  //   saccades.forEach((saccade) => {
+  //     ctx.beginPath();
+  //     ctx.moveTo(saccade.from.x, saccade.from.y);
+  //     ctx.lineTo(saccade.to.x, saccade.to.y);
+  //     ctx.strokeStyle = "red"; // Saccade 색상
+  //     ctx.lineWidth = 2; // 선 굵기
+  //     ctx.globalAlpha = 1.0; // 불투명
+  //     ctx.stroke();
+  //     ctx.closePath();
+  //   });
+  // }
 
 
-  const saveCanvasAsImage = (canvas) => {
-    const imageData = canvas.toDataURL("image/png"); // 캔버스를 Base64로 변환
+  // const saveCanvasAsImage = (canvas) => {
+  //   const imageData = canvas.toDataURL("image/png"); // 캔버스를 Base64로 변환
   
-    console.log('imageData',imageData);
-    // 서버로 전송
-    // fetch("https://your-backend-url.com/upload-image", {
-    //   method: "POST",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    //   body: JSON.stringify({ image: imageData }),
-    // })
-    //   .then((response) => {
-    //     if (!response.ok) {
-    //       throw new Error("Failed to upload image");
-    //     }
-    //     return response.json();
-    //   })
-    //   .then((data) => {
-    //     console.log("Image uploaded successfully:", data);
-    //   })
-    //   .catch((error) => {
-    //     console.error("Error uploading image:", error);
-    //   });
-  };
+  //   console.log('imageData',imageData);
+  //   // 서버로 전송
+  //   // fetch("https://your-backend-url.com/upload-image", {
+  //   //   method: "POST",
+  //   //   headers: {
+  //   //     "Content-Type": "application/json",
+  //   //   },
+  //   //   body: JSON.stringify({ image: imageData }),
+  //   // })
+  //   //   .then((response) => {
+  //   //     if (!response.ok) {
+  //   //       throw new Error("Failed to upload image");
+  //   //     }
+  //   //     return response.json();
+  //   //   })
+  //   //   .then((data) => {
+  //   //     console.log("Image uploaded successfully:", data);
+  //   //   })
+  //   //   .catch((error) => {
+  //   //     console.error("Error uploading image:", error);
+  //   //   });
+  // };
   
 
   // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -271,7 +271,7 @@ export default function MemoryGame({calibrationOffsets}) {
           setVisibleCards(new Array(gridSize * gridSize).fill(false))
           setInitialCardsVisible(false)
           setStartTime(Date.now())
-          stopTracking();
+          //stopTracking();
         }, visibleTime)
 
         return () => clearTimeout(timeout)
@@ -367,7 +367,7 @@ export default function MemoryGame({calibrationOffsets}) {
     setShowGameContent(false);
 
     //webGazer 시작
-    startTracking();
+    //startTracking();
   };
 
   const resetGame = () => {
@@ -534,7 +534,7 @@ export default function MemoryGame({calibrationOffsets}) {
                       <div 
                            className="flex flex-col items-center mb-6" >
                                                   
-                        <canvas
+                        {/* <canvas
                           ref={canvasRef}
                           id="gazeCanvas"
                           style={{
@@ -546,7 +546,7 @@ export default function MemoryGame({calibrationOffsets}) {
                             width: "500px",
                             height: "500px"
                           }}
-                        ></canvas>
+                        ></canvas> */}
                         <h3 className="text-2xl font-semibold mb-4 text-center text-indigo-600">Memory Grid</h3>
                         <div className="grid gap-2 justify-center items-center mb-4" style={{ gridTemplateColumns: `repeat(${gridSize}, 1fr)`, width: 'min(100%, 400px)', margin: '0 auto' }}>
                           {cards.map((card, index) => (
