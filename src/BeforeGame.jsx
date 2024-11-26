@@ -7,6 +7,7 @@ export const BeforeGame = () => {
     name: '',
     age: '',
     gender: '',
+    level: '',
     });
   
     const handleInputChange = (e) => {
@@ -26,7 +27,7 @@ export const BeforeGame = () => {
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-purple-50 to-indigo-100">
       <div className="max-w-md mx-auto p-6 bg-white rounded-lg shadow-lg">
         <h2 className="text-2xl font-semibold mb-6 text-center text-indigo-600">User Profile</h2>
-        <form onSubmit={handleProfileSubmit} className="space-y-4">
+        <form onSubmit={()=>handleProfileSubmit} className="space-y-4">
           {/* Name Field */}
           <div className="flex items-center">
             <label htmlFor="name" className="w-24 font-semibold text-indigo-600">
@@ -80,12 +81,28 @@ export const BeforeGame = () => {
             </select>
           </div>
 
+            {/* Level Field */}
+            <div className="flex items-center">
+            <label htmlFor="age" className="w-24 font-semibold text-indigo-600">
+              Level:
+            </label>
+            <input
+              type="number"
+              id="level"
+              name="level"
+              value={formData.level}
+              onChange={handleInputChange}
+              placeholder="Enter your level"
+              className="flex-grow px-3 py-2 border rounded-md focus:outline-none focus:ring focus:ring-indigo-300"
+            />
+          </div>
+
           {/* Submit Button */}
           <div className="text-center">
             <button
               type="submit"
               className="px-6 py-2 bg-indigo-600 text-white font-semibold rounded-md shadow-md hover:bg-indigo-700 focus:outline-none focus:ring focus:ring-indigo-300"
-              onClick={() => navigate('/memoryGame')}
+              onClick={() => navigate('/calibration')}
             >
               Submit
             </button>
