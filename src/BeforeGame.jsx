@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router';
+import { fetchMemberId } from './apis/userGameData';
 
 export const BeforeGame = () => {
     const navigate = useNavigate();
@@ -12,22 +13,40 @@ export const BeforeGame = () => {
   
     const handleInputChange = (e) => {
         const { name, value } = e.target;
-        setFormData((prev) => ({
-          ...prev,
-          [name]: value,
-        }));
+        if(name === 'age' || name === 'level'){
+          setFormData((prev) => ({
+            ...prev,
+            [name]: parseInt(value),
+          }));
+        }else{
+          setFormData((prev) => ({
+            ...prev,
+            [name]: value,
+          }));
+        }
     };
     
-    const handleProfileSubmit = (e) => {
+    const handleProfileSubmit = async (e) => {
         e.preventDefault();
+
+        const { name, age, gender, level } = formData;
+        if (!name || !age || !gender || !level) {
+          alert("Please fill out all fields before submitting.");
+          return; // 제출 중단
+        }
+
         console.log('Submitted Data:', formData);
+        //const result = await fetchMemberId(formData);
+        //console.log(`memberId : ${result.member_id}`)
+        //navigate(`/MemoryGame/${result.member_id}`)
+        navigate(`/MemoryGame/1`)
     };
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-purple-50 to-indigo-100">
       <div className="max-w-md mx-auto p-6 bg-white rounded-lg shadow-lg">
         <h2 className="text-2xl font-semibold mb-6 text-center text-indigo-600">User Profile</h2>
-        <form onSubmit={()=>handleProfileSubmit} className="space-y-4">
+        <form onSubmit={(e)=>handleProfileSubmit(e)} className="space-y-4">
           {/* Name Field */}
           <div className="flex items-center">
             <label htmlFor="name" className="w-24 font-semibold text-indigo-600">
@@ -102,7 +121,6 @@ export const BeforeGame = () => {
             <button
               type="submit"
               className="px-6 py-2 bg-indigo-600 text-white font-semibold rounded-md shadow-md hover:bg-indigo-700 focus:outline-none focus:ring focus:ring-indigo-300"
-              onClick={() => navigate('/calibration')}
             >
               Submit
             </button>

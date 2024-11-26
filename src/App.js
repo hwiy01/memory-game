@@ -14,9 +14,9 @@ function App() {
   return (
 
     <Routes>
-      <Route path="/" element={<BeforeGame />} />
-      <Route path="/calibration" element={<Calibration setCalibrationOffsets={setCalibrationOffsets}/>} />
-      <Route path="/memoryGame" element={<MemoryGame calibrationOffsets={calibrationOffsets}/>} />
+      <Route path="/" element={<Calibration setCalibrationOffsets={setCalibrationOffsets}/>} />
+      <Route path="/userForm" element={<BeforeGame />} />
+      <Route path="/memoryGame/:id" element={<MemoryGame calibrationOffsets={calibrationOffsets}/>} />
     </Routes>
 
   );

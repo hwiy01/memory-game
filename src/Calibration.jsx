@@ -17,8 +17,7 @@ const calibrationPoints = [
 export default function Calibration({ setCalibrationOffsets }) {
   const [isCalibrating, setIsCalibrating] = useState(false);
   const [currentPointIndex, setCurrentPointIndex] = useState(0);
-  const [calibrationData, setCalibrationData] = useState([]);
-  const [offsets, setOffsets] = useState({ x: 0, y: 0 }); // 실시간 보정값
+  const [calibrationData, setCalibrationData] = useState([]); // 모든 시선 데이터
   const navigate = useNavigate();
   const timerRef = useRef(null); // 타이머 참조값
 
@@ -34,70 +33,67 @@ export default function Calibration({ setCalibrationOffsets }) {
     webgazer.showFaceOverlay(false);
     webgazer.showFaceFeedbackBox(false);
 
-    // 첫 번째 기준점 타이머 시작
     startPointTimer();
   };
 
   const stopCalibration = () => {
-    if (timerRef.current) clearTimeout(timerRef.current); // 타이머 정리
+    if (timerRef.current) clearTimeout(timerRef.current);
     webgazer.end();
     setIsCalibrating(false);
-    setCalibrationOffsets(offsets); // 최종 보정값 저장
-    navigate("/memoryGame"); // MemoryTest.jsx로 이동
+
+    // 최종 보정값 계산
+    const finalOffsets = calculateFinalOffsets(calibrationData);
+    setCalibrationOffsets(finalOffsets); // 부모 컴포넌트에 전달
+    console.log("Final Offsets:", finalOffsets);
+
+    // Calibration 종료 후 자동으로 다음 페이지로 이동
+    navigate("/userForm");
   };
 
   const startPointTimer = () => {
-    // 기존 타이머 제거
     if (timerRef.current) clearTimeout(timerRef.current);
 
-    // 타이머 시작: 3초 뒤 다음 기준점으로 이동
+    // 5초 후 다음 기준점으로 이동
     timerRef.current = setTimeout(() => {
-      if (currentPointIndex < calibrationPoints.length) {
-        collectCurrentPointData();
-        if (currentPointIndex < calibrationPoints.length - 1) {
-          setCurrentPointIndex((prev) => prev + 1);
-          startPointTimer(); // 다음 기준점 타이머 시작
-        } else {
-          stopCalibration(); // 모든 기준점을 완료하면 종료
-        }
+      if (currentPointIndex < calibrationPoints.length - 1) {
+        setCurrentPointIndex((prev) => prev + 1);
+        startPointTimer(); // 다음 기준점 타이머 시작
+      } else {
+        stopCalibration(); // 모든 기준점이 완료되면 종료
       }
-    }, 3000); // 3초
-  };
-
-  const collectCurrentPointData = () => {
-    const currentPoint = calibrationPoints[currentPointIndex];
-
-    if (!currentPoint) return; // currentPoint가 undefined인 경우 처리
-
-    // 보정값 업데이트
-    if (calibrationData.length > 0) {
-      const lastGaze = calibrationData[calibrationData.length - 1].gaze;
-      const offsetX = currentPoint.x - lastGaze.x;
-      const offsetY = currentPoint.y - lastGaze.y;
-
-      setOffsets((prev) => ({
-        x: prev.x + offsetX / calibrationPoints.length,
-        y: prev.y + offsetY / calibrationPoints.length,
-      }));
-    }
-
-    // 현재 기준점 데이터를 추가
-    setCalibrationData((prev) => [
-      ...prev,
-      { gaze: { x: offsets.x, y: offsets.y }, point: currentPoint },
-    ]);
+    }, 5000); // 5초
   };
 
   const handleGazeData = (data) => {
     if (!data) return;
 
-    const adjustedX = data.x + offsets.x;
-    const adjustedY = data.y + offsets.y;
+    const currentPoint = calibrationPoints[currentPointIndex];
+    if (!currentPoint) return;
 
+    // 현재 시선 데이터를 저장
     setCalibrationData((prev) => [
       ...prev,
-      { gaze: { x: adjustedX, y: adjustedY }, point: calibrationPoints[currentPointIndex] },
+      { gaze: { x: data.x, y: data.y }, point: currentPoint },
     ]);
+  };
+
+  const calculateFinalOffsets = (data) => {
+    let totalOffsetX = 0;
+    let totalOffsetY = 0;
+    let count = 0;
+
+    data.forEach(({ gaze, point }) => {
+      if (gaze && point) {
+        totalOffsetX += point.x - gaze.x;
+        totalOffsetY += point.y - gaze.y;
+        count++;
+      }
+    });
+
+    return {
+      x: totalOffsetX / count,
+      y: totalOffsetY / count,
+    };
   };
 
   return (

@@ -4,6 +4,9 @@ import { CalculatorIcon as Numbers, ListOrderedIcon as AlphabeticalOrder, Shapes
 import { Card, CardContent } from './components/ui/Card'
 import Button from './components/ui/Button'
 import './index.css';
+import { fetchGameResult } from './apis/userGameData'
+import { arrayToString } from './utils/arrayToString'
+import { useParams } from 'react-router'
 
 const cardSets = {
   NUMBER: {
@@ -57,6 +60,7 @@ const generateCards = (count, type, gridSize) => {
 }
 
 export default function MemoryGame({calibrationOffsets}) {
+  const { memberId } = useParams();
   const [gridSize, setGridSize] = useState(3)
   const [cardType, setCardType] = useState('NUMBER')
   const [cards, setCards] = useState([])
@@ -73,13 +77,7 @@ export default function MemoryGame({calibrationOffsets}) {
   const [initialCardsVisible, setInitialCardsVisible] = useState(true)
   const [countdown, setCountdown] = useState(null)
   const [showGameContent, setShowGameContent] = useState(false)
-  const [gameResult, setGameResult] = useState({
-    cardCount: 0,
-    cardType: '',
-    solvedTime: 0,
-    userAnswer: '',
-    wrongCount: 0
-  });
+  const [gameResult, setGameResult] = useState(null);
 
   const [gazeData, setGazeData] = useState([]);
   const [isTracking, setIsTracking] = useState(false);
@@ -388,7 +386,7 @@ export default function MemoryGame({calibrationOffsets}) {
     setClearedCards([])
   }
 
-  const submitGame = () => {
+  const submitGame = async () => {
     setGameEnded(true)
     setEndTime(Date.now())
     
@@ -403,9 +401,22 @@ export default function MemoryGame({calibrationOffsets}) {
         }
       }
       setFinalScore({ correct, incorrect, time: (Date.now() - startTime) / 1000 })
+      
+      setGameResult(
+        {
+          cardCount: gridSize * gridSize,
+          cardType: cardType,
+          solvedTime: Date.now() - startTime,
+          userAnswer: arrayToString(userCards),
+          wrongCount: incorrect
+        }
+      )
     }
-    //setGameResult()
   }
+
+  useEffect(()=>{
+    console.log('game Result',gameResult);
+  },[gameResult])
 
   const ResultGrid = ({ answers, isUserGrid }) => (
     <div className="grid gap-2" style={{ gridTemplateColumns: `repeat(${gridSize}, 1fr)` }}>
