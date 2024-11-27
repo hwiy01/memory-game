@@ -1,19 +1,25 @@
-import React, { useState } from 'react'
-import { useNavigate } from 'react-router';
+import React, { useEffect, useState } from 'react'
+import { useLocation, useNavigate } from 'react-router';
 import { fetchMemberId } from './apis/userGameData';
 
 export const BeforeGame = () => {
     const navigate = useNavigate();
+    const location = useLocation();
+    const { score } = location.state || {};
     const [formData, setFormData] = useState({
     name: '',
     age: '',
     gender: '',
-    level: '',
+    level: score,
     });
+
+    useEffect(()=>{
+      console.log(score);
+    },[])
   
     const handleInputChange = (e) => {
         const { name, value } = e.target;
-        if(name === 'age' || name === 'level'){
+        if(name === 'age'){
           setFormData((prev) => ({
             ...prev,
             [name]: parseInt(value),
@@ -109,9 +115,9 @@ export const BeforeGame = () => {
               type="number"
               id="level"
               name="level"
-              value={formData.level}
-              onChange={handleInputChange}
-              placeholder="Enter your level"
+              value={score}
+              //onChange={handleInputChange}
+              //placeholder="Enter your level"
               className="flex-grow px-3 py-2 border rounded-md focus:outline-none focus:ring focus:ring-indigo-300"
             />
           </div>
