@@ -7,6 +7,7 @@ import './index.css';
 import { fetchGameResult } from './apis/userGameData'
 import { arrayToString } from './utils/arrayToString'
 import { useParams } from 'react-router'
+import { memoryGameInst } from './constants/instruction'
 
 const cardSets = {
   NUMBER: {
@@ -460,7 +461,11 @@ export default function MemoryGame() {
             transition={{ duration: 0.5 }}
           >
             <div>
-    
+            <div className="flex justify-center mb-10">
+              <pre className="text-lg font-medium">
+                {memoryGameInst}
+              </pre>
+            </div>
               <h2 className="text-2xl font-semibold mb-4 text-center text-indigo-600">Select Grid Size</h2>
               <div className="flex justify-center space-x-4">
                 <GridSizeOption size={3} />

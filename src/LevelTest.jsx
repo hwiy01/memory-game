@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { useMemoryGame } from './hooks/useMemoryGame';
 import { Button2 } from './components/ui/Button2';
 import { useNavigate } from 'react-router';
+import { levelTestInst } from './constants/instruction';
 
 export function LevelTest() {
     const navigate = useNavigate();
@@ -47,6 +48,10 @@ export function LevelTest() {
         <CardTitle className="text-3xl font-bold text-indigo-700">레벨 테스트</CardTitle>
       </CardHeader>
       <CardContent className="w-full max-w-md space-y-4">
+        {gameState === 'start' &&
+      <pre className="text-lg font-medium mb-10">
+        {levelTestInst}
+      </pre>}
         {gameState !== 'start' && (
           <div className="text-center space-y-2">
             <p className="text-lg font-semibold text-indigo-700">레벨: <span className="text-indigo-700 font-bold">{level}</span></p>
