@@ -283,33 +283,55 @@ export default function MemoryGame() {
 
   const handleCardClick = (card) => {
     if (!gameStarted || initialCardsVisible) return;
-    setSelectedCard(card);
+    if (selectedCard === card) {
+      setClearedCards((prev) => [...prev, card]); // clearedCards에 추가
+      setAvailableCards((prev) => prev.filter((availableCard) => availableCard !== card)); // availableCards에서 제거
+      setSelectedCard(null);
+    } else {
+      setSelectedCard(card); // 선택된 카드 설정
+    }
   }
 
   const handleCellClick = (index) => {
     if (!gameStarted || initialCardsVisible) return;
+  
     if (selectedCard) {
       const newUserCards = [...userCards];
       const oldCard = newUserCards[index];
+  
+      // 이전에 놓았던 카드 복구
+      if (oldCard !== null) {
+        setAvailableCards((prev) => [...prev, oldCard]);
+      }
+  
+      // 새로운 카드 놓기
       newUserCards[index] = selectedCard;
       setUserCards(newUserCards);
-      
+  
+      // 선택한 카드 제거
+      setAvailableCards((prev) => prev.filter((card) => card !== selectedCard));
+  
+      // 정답 체크
       if (selectedCard === cards[index]) {
-        setClearedCards(prev => [...prev, selectedCard]);
+        setClearedCards((prev) => [...prev, selectedCard]);
       }
-      setSelectedCard(null);
-
+  
+      setSelectedCard(null); // 선택 초기화
     } else if (userCards[index] !== null) {
+      // 선택한 카드가 없는 상태에서 기존 카드 제거
       const removedCard = userCards[index];
       const newUserCards = [...userCards];
       newUserCards[index] = null;
       setUserCards(newUserCards);
-
-      if (removedCard) {
-        setClearedCards(prev => prev.filter(card => card !== removedCard));
-      }
+  
+      // availableCards에 복구
+      setAvailableCards((prev) => [...prev, removedCard]);
+  
+      // clearedCards에서도 제거
+      setClearedCards((prev) => prev.filter((card) => card !== removedCard));
     }
-  }
+  };
+  
 
   const GridSizeOption = ({ size }) => (
     <motion.div
