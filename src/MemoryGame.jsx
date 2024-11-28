@@ -301,7 +301,14 @@ export default function MemoryGame() {
   
       // 이전에 놓았던 카드 복구
       if (oldCard !== null) {
-        setAvailableCards((prev) => [...prev, oldCard]);
+        const sortedAvailableCards = [...availableCards, oldCard].sort((a, b) => {
+          const aIndex = availableCardSets[cardType][gridSize].indexOf(a)
+          const bIndex = availableCardSets[cardType][gridSize].indexOf(b)
+          return aIndex - bIndex
+      })
+        //setAvailableCards((prev) => [...prev, oldCard]);
+        setAvailableCards(sortedAvailableCards);
+        console.log("Updated Available Cards:", sortedAvailableCards);
       }
   
       // 새로운 카드 놓기
@@ -326,7 +333,13 @@ export default function MemoryGame() {
       setUserCards(newUserCards);
   
       // availableCards에 복구
-      setAvailableCards((prev) => [...prev, removedCard]);
+      //setAvailableCards((prev) => [...prev, removedCard]);
+      const sortedAvailableCards = [...availableCards, removedCard].sort((a, b) => {
+        const aIndex = availableCardSets[cardType][gridSize].indexOf(a)
+        const bIndex = availableCardSets[cardType][gridSize].indexOf(b)
+        return aIndex - bIndex
+    })
+      setAvailableCards(sortedAvailableCards);
   
       // clearedCards에서도 제거
       setClearedCards((prev) => prev.filter((card) => card !== removedCard));
