@@ -32,7 +32,7 @@ const cardSets = {
   }
 }
 
-const avaliableCardSets = {
+const availableCardSets = {
     NUMBER: {
         3: ['1', '2', '3', '4', '5', '6', '7', '8', '9'],
         4: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16'],
@@ -262,7 +262,7 @@ export default function MemoryGame() {
         //     return aIndex - bIndex
         // })
 
-        setAvailableCards(avaliableCardSets[cardType][gridSize]);
+        setAvailableCards(availableCardSets[cardType][gridSize]);
 
         setClearedCards([])
         setTimeout(() => setShowGameContent(true), 100)
@@ -284,8 +284,8 @@ export default function MemoryGame() {
   const handleCardClick = (card) => {
     if (!gameStarted || initialCardsVisible) return;
     if (selectedCard === card) {
-      setClearedCards((prev) => [...prev, card]); // clearedCards에 추가
-      setAvailableCards((prev) => prev.filter((availableCard) => availableCard !== card)); // availableCards에서 제거
+      //setClearedCards((prev) => [...prev, card]); // clearedCards에 추가
+      //setAvailableCards((prev) => prev.filter((availableCard) => availableCard !== card)); // availableCards에서 제거
       setSelectedCard(null);
     } else {
       setSelectedCard(card); // 선택된 카드 설정
@@ -296,8 +296,8 @@ export default function MemoryGame() {
     if (!gameStarted || initialCardsVisible) return;
   
     if (selectedCard) {
-      const newUserCards = [...userCards];
-      const oldCard = newUserCards[index];
+      const oldCard = userCards[index];
+      //const oldCard = newUserCards[index];
   
       // 이전에 놓았던 카드 복구
       if (oldCard !== null) {
@@ -305,16 +305,17 @@ export default function MemoryGame() {
       }
   
       // 새로운 카드 놓기
+      const newUserCards = [...userCards];
       newUserCards[index] = selectedCard;
       setUserCards(newUserCards);
   
       // 선택한 카드 제거
       setAvailableCards((prev) => prev.filter((card) => card !== selectedCard));
   
-      // 정답 체크
-      if (selectedCard === cards[index]) {
-        setClearedCards((prev) => [...prev, selectedCard]);
-      }
+        // 정답 체크
+        if (selectedCard === cards[index]) {
+          setClearedCards((prev) => [...prev, selectedCard]);
+        }
   
       setSelectedCard(null); // 선택 초기화
     } else if (userCards[index] !== null) {
@@ -329,6 +330,11 @@ export default function MemoryGame() {
   
       // clearedCards에서도 제거
       setClearedCards((prev) => prev.filter((card) => card !== removedCard));
+
+       // 정답 체크
+      if (selectedCard === cards[index]) {
+         setClearedCards((prev) => [...prev, selectedCard]);
+       }
     }
   };
   
@@ -607,7 +613,7 @@ export default function MemoryGame() {
                               <motion.div
                                 key={card}
                                 initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: clearedCards.includes(card) ? 0 : 1, y: 0 }}
+                                animate={{ opacity: 1, y: 0 }}
                                 transition={{ duration: 0.3, delay: index * 0.05 }}
                                 whileHover={{ scale: 1.05 }}
                                 whileTap={{ scale: 0.95 }}
@@ -659,7 +665,7 @@ export default function MemoryGame() {
                             <motion.div
                               key={card}
                               initial={{ opacity: 0, y: 20 }}
-                              animate={{ opacity: clearedCards.includes(card) ? 0 : 1, y: 0 }}
+                              animate={{ opacity: 1, y: 0 }}
                               transition={{ duration: 0.3, delay: index * 0.05 }}
                               whileHover={{ scale: 1.05 }}
                               whileTap={{ scale: 0.95 }}
