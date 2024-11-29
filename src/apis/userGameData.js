@@ -1,6 +1,6 @@
 import axios from "axios"
 
-const baseURL = "https://octopus-epic-shrew.ngrok-free.app/api/v1"
+const baseURL = "https://rightly-sweet-alien.ngrok-free.app/api/v1"
 
 
 export const fetchMemberId = async (userData) => {
